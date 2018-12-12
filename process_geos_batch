@@ -1,0 +1,49 @@
+#!/bin/tcsh
+#
+# submit to slurm batch queue to run on DAV
+#> module load slurm
+#> sbatch batch_script
+#> squeue -u $USER
+#> scancel <ID> 
+#
+#SBATCH -J proc_geos_rean
+#SBATCH -n 8
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=8
+#SBATCH -t 04:00:00
+#SBATCH -p dav
+#SBATCH -C caldera|pronghorn
+#SBATCH -o proc_geos_rean.out.%J
+#SBATCH -e proc_geos_rean.out.%J
+#SBATCH --account=P19010000
+#SBATCH --mem 50G
+
+echo "Begin Prepare-Submit Job"
+
+#module purge
+module list
+module load python
+module load slurm
+module load ncarenv
+module list
+
+ncar_pylib
+
+date
+echo "Begin GEOS Processing Job"
+
+cd /glade/u/home/fvitt/GEOS_download
+
+# --- Determine time-stamp/file-ID string ---
+setenv LID "`date +%y%m%d-%H%M%S`"
+
+./process_geos.py >&! /glade/scratch/fvitt/GEOS/proc_geos.log.$LID
+
+echo "sbatch --begin=05:00:00 process_geos_batch"
+
+sbatch --begin=05:00:00 process_geos_batch
+
+echo "End GEOS Processing Job"
+date
+
+exit 0
