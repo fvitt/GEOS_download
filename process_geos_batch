@@ -22,7 +22,7 @@ echo "Begin Prepare-Submit Job"
 
 #module purge
 module list
-module load python
+module load python/2.7.14
 module load slurm
 module load ncarenv
 module list
