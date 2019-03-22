@@ -6,15 +6,14 @@
 #> squeue -u $USER
 #> scancel <ID> 
 #
-#SBATCH -J proc_geos_rean
-#SBATCH -n 8
-#SBATCH -N 1
+#SBATCH --job-name=proc_geos_rean
+#SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=8
-#SBATCH -t 04:00:00
-#SBATCH -p dav
-#SBATCH -C skylake
-#SBATCH -o proc_geos_rean.out.%J
-#SBATCH -e proc_geos_rean.out.%J
+#SBATCH --time=04:00:00
+#SBATCH --partition=dav
+#SBATCH --constraint=skylake
+#SBATCH --output=proc_geos_rean.out.%J
+#SBATCH --error=proc_geos_rean.out.%J
 #SBATCH --account=P19010000
 #SBATCH --mem 50G
 
