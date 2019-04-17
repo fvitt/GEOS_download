@@ -130,29 +130,29 @@ class MetProc:
 
 
 
-        cmd = 'hsi -a P93300043 -q "mkdir -p '+msdiro+'"'
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdiro+'"'
         print 'cmd = '+cmd
         stat = system(cmd)
         if not stat == 0 : return False
-        cmd = 'hsi -a P93300043 -q "cd '+msdiro+' ; put '+self.combined_data_file + ' : '+ self.combined_data_filebase + ' ; chmod +r '+ self.combined_data_filebase +'"'
-        print 'cmd = '+cmd
-        stat = system(cmd)
-        if not stat == 0 : return False
-
-        cmd = 'hsi -a P93300043 -q "mkdir -p '+msdir2+'"'
-        stat = system(cmd)
-        if not stat == 0 : return False
-        cmd = 'hsi -a P93300043 -q "cd '+msdir2+' ; put '+self.regridded_data_file + ' : '+ self.regridded_data_filebase + ' ; chmod +r '+ self.regridded_data_filebase +'"'
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdiro+' ; put '+self.combined_data_file + ' : '+ self.combined_data_filebase + ' ; chmod +r '+ self.combined_data_filebase +'"'
         print 'cmd = '+cmd
         stat = system(cmd)
         if not stat == 0 : return False
 
-
-
-        cmd = 'hsi -a P93300043 -q "mkdir -p '+msdir2_1deg+'"'
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdir2+'"'
         stat = system(cmd)
         if not stat == 0 : return False
-        cmd = 'hsi -a P93300043 -q "cd '+msdir2_1deg+' ; put '+self.regridded_data_file_1deg + ' : '+ self.regridded_data_filebase_1deg + ' ; chmod +r '+ self.regridded_data_filebase_1deg +'"'
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2+' ; put '+self.regridded_data_file + ' : '+ self.regridded_data_filebase + ' ; chmod +r '+ self.regridded_data_filebase +'"'
+        print 'cmd = '+cmd
+        stat = system(cmd)
+        if not stat == 0 : return False
+
+
+
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdir2_1deg+'"'
+        stat = system(cmd)
+        if not stat == 0 : return False
+        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2_1deg+' ; put '+self.regridded_data_file_1deg + ' : '+ self.regridded_data_filebase_1deg + ' ; chmod +r '+ self.regridded_data_filebase_1deg +'"'
         print 'cmd = '+cmd
         stat = system(cmd)
         if not stat == 0 : return False
