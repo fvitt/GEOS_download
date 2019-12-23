@@ -1,43 +1,45 @@
 #! /usr/bin/env python
-import Nio
-import numpy
+import numpy as np
+import xarray as xr
 
-def check_var( fh, varname, minx, maxx ):
-    minval = numpy.amin(fh.variables[varname].get_value())
-    maxval = numpy.amax(fh.variables[varname].get_value())
+def check_var( ds, varname, minx, maxx ):
+    minval = np.amin(ds[varname].values)
+    maxval = np.amax(ds[varname].values)
 
     if  minval<minx or maxval>maxx :
-        print varname + "... minval = " + str(minval) + "   maxval = " + str(maxval)
+        print(varname + "... minval = " + str(minval) + "   maxval = " + str(maxval))
         return False
 
     return True
 
 def check_met_data( filepath ):
 
-    fh = Nio.open_file(filepath)
-    ok = check_var ( fh,    "T",  1.e1, 1.e3 )
-    if ok: ok = check_var ( fh,   "TS",  1.e1, 1.e3 )
-    if ok: ok = check_var ( fh,    "U", -1.e3, 1.e3 )
-    if ok: ok = check_var ( fh,    "V", -1.e3, 1.e3 )
-    if ok: ok = check_var ( fh,   "PS",  1.e3, 1.e6 )
-    if ok: ok = check_var ( fh,  "ORO",    0., 2.   )
-    if ok: ok = check_var ( fh, "PHIS", -2.e3, 1.e6 )
-    if ok: ok = check_var ( fh,    "Q",-1.e-3, 1.   )
-    if ok: ok = check_var ( fh, "QFLX",-1.e-3, 1.   )
-    if ok: ok = check_var ( fh, "SHFLX",-1.e3, 1.e5 )
-    if ok: ok = check_var ( fh, "TAUX", -1.e2, 1.e2 )
-    if ok: ok = check_var ( fh, "TAUX", -1.e2, 1.e2 )
-    fh.close()
+    ds = xr.open_dataset(filepath)
+    ok = True
+
+    if ok: ok = check_var ( ds, "T",  1.e1, 1.e3 )
+    if ok: ok = check_var ( ds, "U", -1.e3, 1.e3 )
+    if ok: ok = check_var ( ds, "V", -1.e3, 1.e3 )
+    if ok: ok = check_var ( ds, "PS", 1.e3, 1.e6 )
+    if ok: ok = check_var ( ds, "SHFLX", -1.e5, 3.e5 )
+    if ok: ok = check_var ( ds, "PHIS", -2.e3, 1.e6 )
+    if ok: ok = check_var ( ds, "QFLX", -1.e-3, 1.   )
+    if ok: ok = check_var ( ds, "TAUX", -1.e2, 1.e2 )
+    if ok: ok = check_var ( ds, "TAUY", -1.e2, 1.e2 )
+    if ok: ok = check_var ( ds,  "ORO",    0., 2.   )
+
+    ds.close()
     if not ok:
-        print " ***** UNREALISTIC VALUES FOUND IN: "+filepath
+        print(" ***** UNREALISTIC VALUES FOUND IN: "+filepath)
     return ok
 
 def _test():
-    print 'Begin Test ...'
-    #filepath = '/glade/scratch/fvitt/GEOS/Y2013/M12/D04/GEOS5_19x2_20131204.nc'
-    filepath = '/glade/scratch/fvitt/GEOS/Y2013/M12/D04/GEOS5_orig_res_20131204.nc'
+    print('Begin Test ...')
+    #filepath = '/glade/scratch/fvitt/GEOS/Y2019/M12/D10/GEOS5_19x2_20191210.nc'
+    filepath = '/glade/scratch/fvitt/GEOS_test/Y2019/M12/D10/GEOS5_orig_res_20191210.py3test2.nc'
+    print("check file: ",filepath)
     ok = check_met_data( filepath )
 
-    print "file ok : ",ok
+    print("file ok : ",ok)
 
-    print 'End Test ...'
+    print('End Test ...')

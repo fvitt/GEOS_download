@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from os import path, remove, system
 from subprocess import call
 from glob import glob
-from combine_met_data_eff import combine_met_data
+from combine_met_data import combine_met_data
 from python_geos5_das_2x import regrid_met_data
 from check_met_data import check_met_data
 
@@ -26,8 +26,8 @@ class MetProc:
             self.regridded_data_filebase = 'GEOS5_19x2_'+yyyymmdd+'.nc'
             self.regridded_data_filebase_1deg = 'GEOS5_09x125_'+yyyymmdd+'.nc'
 
-#        print 'self.regridded_data_filebase = ',self.regridded_data_filebase
-#        print 'self.regridded_data_filebase_1deg = ',self.regridded_data_filebase_1deg
+#        print('self.regridded_data_filebase = ',self.regridded_data_filebase)
+#        print('self.regridded_data_filebase_1deg = ',self.regridded_data_filebase_1deg)
 #
 #        self.regridded_data_filebase = 'GEOS5.11.0_19x2_'+yyyymmdd+'.nc'
         self.combined_data_file = self.directory + '/' + self.combined_data_filebase
@@ -43,7 +43,7 @@ class MetProc:
         month = self.date.strftime("%m")
         day   = self.date.strftime("%d")
         cmd = ["./download_data","-year",year,"-month",month,"-day",day,'-local_basedir',self.rootdir]
-        print " cmd: ",cmd
+        print(" cmd: ",cmd)
         stat = call(cmd)
         if stat == 0 :
             cmd = ['touch',self.directory+'/.downloaded']
@@ -131,11 +131,11 @@ class MetProc:
 
 
         cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdiro+'"'
-        print 'cmd = '+cmd
+        print('cmd = '+cmd)
         stat = system(cmd)
         if not stat == 0 : return False
         cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdiro+' ; put '+self.combined_data_file + ' : '+ self.combined_data_filebase + ' ; chmod +r '+ self.combined_data_filebase +'"'
-        print 'cmd = '+cmd
+        print('cmd = '+cmd)
         stat = system(cmd)
         if not stat == 0 : return False
 
@@ -143,7 +143,7 @@ class MetProc:
         stat = system(cmd)
         if not stat == 0 : return False
         cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2+' ; put '+self.regridded_data_file + ' : '+ self.regridded_data_filebase + ' ; chmod +r '+ self.regridded_data_filebase +'"'
-        print 'cmd = '+cmd
+        print('cmd = '+cmd)
         stat = system(cmd)
         if not stat == 0 : return False
 
@@ -153,7 +153,7 @@ class MetProc:
         stat = system(cmd)
         if not stat == 0 : return False
         cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2_1deg+' ; put '+self.regridded_data_file_1deg + ' : '+ self.regridded_data_filebase_1deg + ' ; chmod +r '+ self.regridded_data_filebase_1deg +'"'
-        print 'cmd = '+cmd
+        print('cmd = '+cmd)
         stat = system(cmd)
         if not stat == 0 : return False
 
@@ -165,10 +165,10 @@ class MetProc:
 
     def cleanup( self ) :
         if path.exists(self.directory):
-            print " clean up dir : "+self.directory
+            print(" clean up dir : "+self.directory)
             files = glob(self.directory+'/*.nc4') + glob(self.directory+'/*.nc')
             for f in files :
-                print " try to rm : "+f
+                print(" try to rm : "+f)
                 stat = remove( f )
         return True
 
@@ -178,73 +178,73 @@ def _test():
 
     time0 = datetime.now()
 
-    print "Begin Test"
+    print("Begin Test")
 
 #    date =  datetime(2013,12,31)
-    date =  datetime(2017,9,30)
+    date =  datetime(2019,12,10)
 
-    geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS')
-    print "  check for : " + date.strftime("%x")
+    geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS_test')
+    print("  check for : " + date.strftime("%x"))
 
     downloaded = geosproc.check( 'downloaded' )
-    print "Downloaded: ", downloaded
+    print("Downloaded: ", downloaded)
 
     if not downloaded :
         dwnld_ok = geosproc.download( )
-        print " dwnld_ok = ",dwnld_ok
+        print(" dwnld_ok = ",dwnld_ok)
 
     time1 = datetime.now()
 
     combined = geosproc.check( 'combined')
-    print "Combined: ",combined
+    print("Combined: ",combined)
 
     if not combined :
         combnd_ok = geosproc.combine( )
-        print "combnd_ok: ",combnd_ok
+        print("combnd_ok: ",combnd_ok)
 
     time2 = datetime.now()
 
     regridded = geosproc.check( 'regridded')
-    print "Regridded: ",regridded
+    print("Regridded: ",regridded)
 
     if not regridded :
         regrd_ok = geosproc.regrid( )
-        print "regd_ok: ",regrd_ok
+        print("regd_ok: ",regrd_ok)
 
     regridded_1deg = geosproc.check( 'regridded_1deg')
-    print "Regridded 1deg: ",regridded_1deg
+    print("Regridded 1deg: ",regridded_1deg)
 
     if not regridded_1deg :
         regrd_ok = geosproc.regrid_1deg( )
-        print "1deg regd_ok: ",regrd_ok
+        print("1deg regd_ok: ",regrd_ok)
 
     time3 = datetime.now()
 
     data_ok = geosproc.validate()
-    print "data_ok: ", data_ok
+    print("data_ok: ", data_ok)
     if not data_ok: return False
 
     data_ok_1deg = geosproc.validate_1deg()
-    print "data_ok_1deg: ", data_ok_1deg
+    print("data_ok_1deg: ", data_ok_1deg)
     if not data_ok_1deg: return False
 
     time4 = datetime.now()
 
     archived = geosproc.check( 'archived')
-    print "Archived: ", archived
-
-    if not archived :
-        arch_ok = geosproc.archive( )
-        print "arch_ok: ",arch_ok
-
+    print("Archived: ", archived)
+#
+#    if not archived :
+#        arch_ok = geosproc.archive( )
+#        print("arch_ok: ",arch_ok)
+#
     time5 = datetime.now()
 
-    print "Download time  : ", time1-time0
-    print "Combine time   : ", time2-time1
-    print "Regrid time    : ", time3-time2
-    print "Data check time: ", time4-time3
-    print "Archive time   : ", time5-time4
-    print "Total time     : ", time5-time0
+    print("Download time  : ", time1-time0)
+    print("Combine time   : ", time2-time1)
+    print("Regrid time    : ", time3-time2)
+    print("Data check time: ", time4-time3)
+    print("Archive time   : ", time5-time4)
+    print("Total time     : ", time5-time0)
 
-    print "Test Done"
+    print("Test Done")
 

@@ -272,7 +272,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   if (status /= nf90_noerr) call handle_err(status)
   status = nf90_def_dim(out_ncid, "ilev", niLevs, newiLevDimID)
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   ! Define the coordinate variables
   status = nf90_def_var(out_ncid, "lat",     nf90_float, (/ newLatDimID /),  newLatVarId)
   if(status /= nf90_NoErr) call handle_err(status)
@@ -295,18 +295,14 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   status = nf90_copy_att(ncid, levid, "long_name", out_ncid, newLevVarId )
   if (status /= nf90_noerr) call handle_err(status)
 
-  !print*,'start time'
   status = nf90_def_var(out_ncid, "time",     nf90_float, (/ newRecordDimID /),  newRecordVarID)
   if(status /= nf90_NoErr) call handle_err(status)
-  !print*,newRecordVarID
   status = nf90_copy_att(ncid, timeid, "units", out_ncid, newRecordVarID)
- ! status = nf90_put_att(out_ncid, newRecordVarID, "units", "days since "//trim(year)//"-01-01 00:00:00")
+  if (status /= nf90_noerr) call handle_err(status)
+  status = nf90_copy_att(ncid, timeid, "calendar", out_ncid, newRecordVarID)
   if (status /= nf90_noerr) call handle_err(status)
   status = nf90_copy_att(ncid, timeid, "long_name", out_ncid, newRecordVarID)
   if (status /= nf90_noerr) call handle_err(status)
- !status = nf90_copy_att(ncid, timeid, "calendar", out_ncid, newRecordVarID)
- !if (status /= nf90_noerr) call handle_err(status)
-  !print*,'end time'
 
   status = nf90_def_var(out_ncid, "ilev",     nf90_float, (/ newiLevDimID /),  newiLevVarID)
   if(status /= nf90_NoErr) call handle_err(status)

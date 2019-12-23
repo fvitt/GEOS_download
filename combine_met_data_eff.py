@@ -301,7 +301,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
     v = hrz_file.variables["FRLAND"].get_value()
     v = numpy.roll(v,nroll,axis=2)
     v = numpy.tile(v,(8,1,1))
-    v = numpy.where(v==2, 1, v)
+    #v = numpy.where(v==2, 1, v)
     v = numpy.where(seaice>0.5,2,v)
     out_file.variables["ORO"].assign_value(v)
 
@@ -330,11 +330,11 @@ def _test() :
 
     time0 = datetime.now()
 
-    rootdir = '/glade/scratch/fvitt/GEOS'
-    date = datetime(2016,6,10)
+    rootdir = '/glade/scratch/fvitt/GEOS_test'
+    date = datetime(2019,12,10)
     yyyymmdd = date.strftime("%Y%m%d")
     dir1 = rootdir + "/" + date.strftime("Y%Y/M%m/D%d")
-    ofilepath = dir1+'/GEOS5_orig_res_'+yyyymmdd+'.py.nc'
+    ofilepath = dir1+'/GEOS5_orig_res_'+yyyymmdd+'.py2test2.nc'
     ret = combine_met_data( rootdir, date, ofilepath )
 
     time1 = datetime.now()
