@@ -181,9 +181,9 @@ def _test():
     print "Begin Test"
 
 #    date =  datetime(2013,12,31)
-    date =  datetime(2017,9,30)
+    date =  datetime(2019,7,11)
 
-    geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS')
+    geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS_test')
     print "  check for : " + date.strftime("%x")
 
     downloaded = geosproc.check( 'downloaded' )

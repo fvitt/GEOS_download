@@ -34,8 +34,8 @@ def check_met_data( filepath ):
 
 def _test():
     print 'Begin Test ...'
-    #filepath = '/glade/scratch/fvitt/GEOS/Y2013/M12/D04/GEOS5_19x2_20131204.nc'
-    filepath = '/glade/scratch/fvitt/GEOS/Y2013/M12/D04/GEOS5_orig_res_20131204.nc'
+    #filepath = '/glade/scratch/fvitt/GEOS/Y2019/M12/D14/GEOS5_orig_res_20191214.nc'
+    filepath = '/glade/scratch/fvitt/GEOS/Y2019/M12/D14/GEOS5_09x125_20191214.nc'
     ok = check_met_data( filepath )
 
     print "file ok : ",ok
