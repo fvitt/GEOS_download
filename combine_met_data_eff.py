@@ -10,7 +10,7 @@ def define_flds( vars, filepath, out_file ):
     filep = Nio.open_file( filepath[0] )
 
     for ivar in vars.keys():
-        
+
         ovar = vars[ivar]
         print 'define '+ovar+' from '+ivar
 
@@ -198,7 +198,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
         val = getattr(hrz_file.variables["FRLAND"],att)
         setattr(out_file.variables["ORO"],att,val)
 
-    tavg_flx_vars = {'HFLUX':'SHFLX', 'TAUX':'TAUX','TAUY':'TAUY', 'EVAP':'QFLX'} # flx 
+    tavg_flx_vars = {'HFLUX':'SHFLX', 'TAUX':'TAUX','TAUY':'TAUY', 'EVAP':'QFLX'} # flx
     tavg_flx_filem = glob.glob(dir0+'/GEOS.fp.asm.tavg1_2d_flx_Nx.*_2330.V01.nc4' )
     define_flds( tavg_flx_vars, tavg_flx_filem, out_file )
 
@@ -229,7 +229,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
         if vrt_file.dimensions.keys().count(var) == 0:
             v = vrt_file.variables[var].get_value()
             out_file.variables[var].assign_value(v)
-            
+
     vrt_file.close()
 
 
@@ -272,7 +272,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
             v = numpy.roll(v,nroll,axis=2)
             v = numpy.tile(v,(8,1,1))
             out_file.variables[var].assign_value(v)
-            
+
 
 
     files = glob.glob(dir1+'/GEOS.fp.asm.tavg1_2d_flx_Nx.*.nc4')
@@ -301,7 +301,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
     v = hrz_file.variables["FRLAND"].get_value()
     v = numpy.roll(v,nroll,axis=2)
     v = numpy.tile(v,(8,1,1))
-    v = numpy.where(v==2, 1, v)
+    #v = numpy.where(v==2, 1, v)
     v = numpy.where(seaice>0.5,2,v)
     out_file.variables["ORO"].assign_value(v)
 
@@ -334,7 +334,7 @@ def _test() :
     date = datetime(2019,12,10)
     yyyymmdd = date.strftime("%Y%m%d")
     dir1 = rootdir + "/" + date.strftime("Y%Y/M%m/D%d")
-    ofilepath = dir1+'/GEOS5_orig_res_'+yyyymmdd+'.py2test.nc'
+    ofilepath = dir1+'/GEOS5_orig_res_'+yyyymmdd+'.py2test2.nc'
     ret = combine_met_data( rootdir, date, ofilepath )
 
     time1 = datetime.now()

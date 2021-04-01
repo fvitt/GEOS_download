@@ -8,19 +8,19 @@ minute = timedelta(minutes=1)
 now = datetime.now()
 #later = now+(5*minute)
 #
-#print later.strftime("%H:%M")
+#print(later.strftime("%H:%M"))
 
 date = now-22*day
-print date
+print(date)
 
 for x in range(0,20):
     date = now-x*day
-    print " dir : "+date.strftime("Y%Y/M%m/D%d")
+    print(" dir : "+date.strftime("Y%Y/M%m/D%d"))
     yr = date.strftime("%Y")
     mon = date.strftime("%m")
     dom = date.strftime("%d")
-    print " -------> proc_goes -year "+yr+" -month "+mon+" -day "+dom
+    print(" -------> proc_goes -year "+yr+" -month "+mon+" -day "+dom)
 
-print xyz
+#print(xyz)
 
 

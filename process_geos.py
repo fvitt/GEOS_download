@@ -2,7 +2,7 @@
 from datetime import datetime, timedelta
 from MetProc import MetProc
 
-print "BEGIN GEOS processing ..."
+print("BEGIN GEOS processing ...")
 
 day = timedelta(days=1)
 now = datetime.now()
@@ -14,8 +14,8 @@ days_back = 20
 
 for x in range(days_back+1,0,-1):
     date = now-x*day
-    print " ------------------"
-    print " check download : " + date.strftime("%x")
+    print(" ------------------")
+    print(" check download : " + date.strftime("%x"))
     geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
 
     downloaded = geosproc.check( 'downloaded' )
@@ -25,8 +25,8 @@ for x in range(days_back+1,0,-1):
 # check if data has been combined for past <days_back> days
 for x in range(days_back,0,-1):
     date = now-x*day
-    print " ------------------"
-    print " check combined : " + date.strftime("%x")
+    print(" ------------------")
+    print(" check combined : " + date.strftime("%x"))
     geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
 
     downloaded = geosproc.check( 'downloaded' )
@@ -37,8 +37,8 @@ for x in range(days_back,0,-1):
 # check if data has been regridded for past <days_back> days
 for x in range(days_back,0,-1):
     date = now-x*day
-    print " ------------------"
-    print " regrid : " + date.strftime("%x")
+    print(" ------------------")
+    print(" regrid : " + date.strftime("%x"))
     geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
 
     combined = geosproc.check( 'combined' )
@@ -55,8 +55,8 @@ for x in range(days_back,0,-1):
 
 for x in range(days_back,0,-1):
     date = now-x*day
-    print " ------------------"
-    print " validate : " + date.strftime("%x")
+    print(" ------------------")
+    print(" validate : " + date.strftime("%x"))
     geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
 
     regridded = geosproc.check( 'regridded' )
@@ -75,8 +75,8 @@ for x in range(days_back,0,-1):
 
 for x in range(days_back,0,-1):
     date = now-x*day
-    print " ------------------"
-    print " archive : " + date.strftime("%x")
+    print(" ------------------")
+    print(" archive : " + date.strftime("%x"))
     geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
 
     validated = geosproc.check( 'validated' )
@@ -85,16 +85,16 @@ for x in range(days_back,0,-1):
     if validated and not archived:
         ok = geosproc.archive( )
 
-# clean up ....
+## clean up ....
+#
+#for x in range(days_back+10,days_back+30):
+#    date = now-x*day
+#    print(" ------------------")
+#    print(" clean up : " + date.strftime("%x"))
+#    geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
+#
+#    archived = geosproc.check( 'archived' )
+#    if archived :
+#        ok = geosproc.cleanup( )
 
-for x in range(days_back+10,days_back+30):
-    date = now-x*day
-    print " ------------------"
-    print " clean up : " + date.strftime("%x")
-    geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
-
-    archived = geosproc.check( 'archived' )
-    if archived :
-        ok = geosproc.cleanup( )
-
-print "GEOS processing DONE"
+print("GEOS processing DONE")
