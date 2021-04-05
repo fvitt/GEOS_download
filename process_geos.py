@@ -7,8 +7,8 @@ print("BEGIN GEOS processing ...")
 day = timedelta(days=1)
 now = datetime.now()
 
-#days_back = 10
-days_back = 20
+days_back = 10
+#days_back = 20
 
 # check if data is download for past <days_back>+1 days ...
 
@@ -85,16 +85,16 @@ for x in range(days_back,0,-1):
     if validated and not archived:
         ok = geosproc.archive( )
 
-## clean up ....
-#
-#for x in range(days_back+10,days_back+30):
-#    date = now-x*day
-#    print(" ------------------")
-#    print(" clean up : " + date.strftime("%x"))
-#    geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
-#
-#    archived = geosproc.check( 'archived' )
-#    if archived :
-#        ok = geosproc.cleanup( )
+# clean up ....
+
+for x in range(days_back+5,days_back+35):
+    date = now-x*day
+    print(" ------------------")
+    print(" clean up : " + date.strftime("%x"))
+    geosproc = MetProc(date,'/glade/scratch/fvitt/GEOS')
+
+    archived = geosproc.check( 'archived' )
+    if archived :
+        ok = geosproc.cleanup( )
 
 print("GEOS processing DONE")

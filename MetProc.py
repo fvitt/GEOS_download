@@ -26,10 +26,6 @@ class MetProc:
             self.regridded_data_filebase = 'GEOS5_19x2_'+yyyymmdd+'.nc'
             self.regridded_data_filebase_1deg = 'GEOS5_09x125_'+yyyymmdd+'.nc'
 
-#        print('self.regridded_data_filebase = ',self.regridded_data_filebase)
-#        print('self.regridded_data_filebase_1deg = ',self.regridded_data_filebase_1deg)
-#
-#        self.regridded_data_filebase = 'GEOS5.11.0_19x2_'+yyyymmdd+'.nc'
         self.combined_data_file = self.directory + '/' + self.combined_data_filebase
         self.regridded_data_file = self.directory +  '/' + self.regridded_data_filebase
         self.regridded_data_file_1deg = self.directory +  '/' + self.regridded_data_filebase_1deg
@@ -109,15 +105,14 @@ class MetProc:
         yyyy = self.date.strftime("%Y")
 
         lcldir = '/glade/p/cesm/chwg_dev/met_data/GEOS5/'+yyyy
-        msdiro = '/CCSM/csm/met_data/GEOS5/orig_res/'+yyyy
-        msdir2 = '/CCSM/csm/met_data/GEOS5/1.9x2.5/'+yyyy
         lcldir_1deg = '/glade/p/cesm/chwg_dev/met_data/GEOS5/0.9x1.25/'+yyyy
-        msdir2_1deg = '/CCSM/csm/met_data/GEOS5/0.9x1.25/'+yyyy
+        lcldir_orig = '/glade/p/cesm/chwg_dev/met_data/GEOS5/orig_res/'+yyyy
 
         cmd = ['mkdir','-p',lcldir]
         stat = call(cmd)
         if not stat == 0 : return False
         cmd = ['cp',self.regridded_data_file,lcldir]
+        print('cmd = ',cmd)
         stat = call(cmd)
         if not stat == 0 : return False
 
@@ -125,36 +120,16 @@ class MetProc:
         stat = call(cmd)
         if not stat == 0 : return False
         cmd = ['cp',self.regridded_data_file_1deg,lcldir_1deg]
+        print('cmd = ',cmd)
         stat = call(cmd)
         if not stat == 0 : return False
 
-
-
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdiro+'"'
-        print('cmd = '+cmd)
-        stat = system(cmd)
+        cmd = ['mkdir','-p',lcldir_orig]
+        stat = call(cmd)
         if not stat == 0 : return False
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdiro+' ; put '+self.combined_data_file + ' : '+ self.combined_data_filebase + ' ; chmod +r '+ self.combined_data_filebase +'"'
-        print('cmd = '+cmd)
-        stat = system(cmd)
-        if not stat == 0 : return False
-
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdir2+'"'
-        stat = system(cmd)
-        if not stat == 0 : return False
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2+' ; put '+self.regridded_data_file + ' : '+ self.regridded_data_filebase + ' ; chmod +r '+ self.regridded_data_filebase +'"'
-        print('cmd = '+cmd)
-        stat = system(cmd)
-        if not stat == 0 : return False
-
-
-
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "mkdir -p '+msdir2_1deg+'"'
-        stat = system(cmd)
-        if not stat == 0 : return False
-        cmd = '/ncar/opt/hpss/hpss/bin/hsi -a P93300043 -q "cd '+msdir2_1deg+' ; put '+self.regridded_data_file_1deg + ' : '+ self.regridded_data_filebase_1deg + ' ; chmod +r '+ self.regridded_data_filebase_1deg +'"'
-        print('cmd = '+cmd)
-        stat = system(cmd)
+        cmd = ['cp',self.combined_data_file,lcldir_orig]
+        print('cmd = ',cmd)
+        stat = call(cmd)
         if not stat == 0 : return False
 
         cmd = ['touch',self.directory+'/.archived']
@@ -180,6 +155,7 @@ def _test():
 
     print("Begin Test")
 
+#    date =  datetime(2013,12,31)
     date =  datetime(2019,12,10)
 
     geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS_test')
@@ -231,11 +207,7 @@ def _test():
 
     archived = geosproc.check( 'archived')
     print("Archived: ", archived)
-#
-#    if not archived :
-#        arch_ok = geosproc.archive( )
-#        print("arch_ok: ",arch_ok)
-#
+
     time5 = datetime.now()
 
     print("Download time  : ", time1-time0)

@@ -1,27 +1,18 @@
 #!/bin/tcsh
 #
-# submit to slurm batch queue to run on DAV
-#> module load slurm
-#> sbatch batch_script
-#> squeue -u $USER
-#> scancel <ID> 
-#
-#SBATCH --job-name=proc_geos_rean
-#SBATCH --ntasks=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --time=04:00:00
-#SBATCH --partition=dav
-#SBATCH --constraint=skylake
-#SBATCH --output=proc_geos_rean.out.%J
-#SBATCH --error=proc_geos_rean.out.%J
-#SBATCH --account=P19010000
-#SBATCH --mem 50G
+#PBS -N proc_geos_rean
+#PBS -A P19010000
+#PBS -l select=1:ncpus=8:mem=100GB
+#PBS -l walltime=04:00:00
+#PBS -q casper
+#PBS -j oe
 
 echo "Begin Prepare-Submit Job"
 
 module purge
 module load python
 module load ncarenv
+module load intel
 module list
 
 ncar_pylib
@@ -29,16 +20,15 @@ ncar_pylib
 date
 echo "Begin GEOS Processing Job"
 
-cd /glade/u/home/fvitt/GEOS_download
+cd $PBS_O_WORKDIR
 
 # --- Determine time-stamp/file-ID string ---
 setenv LID "`date +%y%m%d-%H%M%S`"
 
 ./process_geos.py >&! /glade/scratch/fvitt/GEOS/proc_geos.log.$LID
 
-echo "sbatch --begin=05:00:00 process_geos_batch"
-
-sbatch --begin=05:00:00 process_geos_batch
+echo "qsub -a 0500 process_geos_batch"
+qsub -a 0500 process_geos_batch
 
 echo "End GEOS Processing Job"
 date
