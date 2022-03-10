@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import numpy as np
 import xarray as xr
+import check_time as ct
 
 def check_var( ds, varname, minx, maxx ):
     minval = np.amin(ds[varname].values)
@@ -31,12 +32,20 @@ def check_met_data( filepath ):
     ds.close()
     if not ok:
         print(" ***** UNREALISTIC VALUES FOUND IN: "+filepath)
+
+    ok = ct.check(filepath, [ 0, 10800, 21600, 32400, 43200, 54000, 64800, 75600 ] )
+    if not ok:
+        print(" ***** Issue with time or datesec in: "+filepath)
+
     return ok
 
 def _test():
     print('Begin Test ...')
-    #filepath = '/glade/scratch/fvitt/GEOS/Y2019/M12/D10/GEOS5_19x2_20191210.nc'
-    filepath = '/glade/scratch/fvitt/GEOS_test/Y2019/M12/D10/GEOS5_orig_res_20191210.py3test2.nc'
+
+    #filepath = '/glade/p/cesm/chwg_dev/met_data/GEOS5/orig_res/2021/GEOS5_orig_res_20210420.nc.0'
+    #filepath = '/glade/p/cesm/chwg_dev/met_data/GEOS5/0.9x1.25/2021/GEOS5_09x125_20210420.nc.0'
+    filepath = '/glade/p/cesm/chwg_dev/met_data/GEOS5/2021/GEOS5_19x2_20210420.nc'
+
     print("check file: ",filepath)
     ok = check_met_data( filepath )
 
