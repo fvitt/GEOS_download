@@ -121,7 +121,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
     opt.Format = "netcdf4classic"
     #opt.Format = "LargeFile"
 
-    vrt_file = Nio.open_file('/glade/p/acom/acom-climate/fvitt/GEOS/GEOS5_orig_res_20180715.nc',mode='r')
+    vrt_file = Nio.open_file('/glade/work/fvitt/GEOS/GEOS5_orig_res_20180715.nc',mode='r')
 
     # define vertical coordinate
 
@@ -143,7 +143,7 @@ def combine_met_data( rootdir, date, ofilepath ) :
 
     # define horizontal coordinates
 
-    hrz_file = Nio.open_file('/glade/p/acom/acom-climate/fvitt/GEOS/GEOS.fp.asm.const_2d_asm_Nx.00000000_0000.V01.nc4')
+    hrz_file = Nio.open_file('/glade/work/fvitt/GEOS/GEOS.fp.asm.const_2d_asm_Nx.00000000_0000.V01.nc4')
 
     length = hrz_file.dimensions["lat"]
     out_file.create_dimension("lat",length)

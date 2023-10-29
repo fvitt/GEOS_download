@@ -10,7 +10,7 @@ set server = ftp.nccs.nasa.gov
 
 set base_filename = "GEOS.fp.asm"
 set remote_basedir = "/fp/das"
-set local_basedir = "/glade/scratch/$USER/GEOS"
+set local_basedir = "/glade/scratch/$USER/GEOS_test"
 
 set ftpuser = "gmao_ops"
 set password = ""
@@ -89,7 +89,7 @@ while ( $loop_cnt < $loop_lim )
 
     echo "ls $local_dir/*${yyyymmdd_date}_* "
     set xfer_file_cnt = `ls $local_dir/*${yyyymmdd_date}_* | wc -l`
-    echo ${xfer_file_cnt} 
+    echo ${xfer_file_cnt}
     if( $xfer_file_cnt == $file_tot ) then
       echo "Acquired $xfer_file_cnt files"
       exit 0

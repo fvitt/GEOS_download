@@ -2,7 +2,7 @@
 import numpy
 import python_geos5_das_2x
 
-inFileName = '/glade/scratch/fvitt/GEOS/Y2021/M03/D25/GEOS5_orig_res_20210325.nc'
+inFileName = '/glade/scratch/fvitt/GEOS/Y2023/M08/D01/GEOS5_orig_res_20230801.nc'
 
 outFileName = '/glade/scratch/fvitt/pytest_geos_2deg.nc'
 newLats = 96

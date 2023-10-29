@@ -20,8 +20,8 @@ def combine_met_data( rootdir, date, ofilepath ) :
     #print("dir0: ",dir0)
     #print("dir1: ",dir1)
 
-    coord_ds = xr.open_dataset('/glade/p/acom/acom-climate/fvitt/GEOS/GEOS5_orig_res_20180715.nc')
-    lndfr_ds = xr.open_dataset('/glade/p/acom/acom-climate/fvitt/GEOS/GEOS.fp.asm.const_2d_asm_Nx.00000000_0000.V01.nc4')
+    coord_ds = xr.open_dataset('/glade/work/fvitt/GEOS/GEOS5_orig_res_20180715.nc')
+    lndfr_ds = xr.open_dataset('/glade/work/fvitt/GEOS/GEOS.fp.asm.const_2d_asm_Nx.00000000_0000.V01.nc4')
     lfr = lndfr_ds.FRLAND.values[0]
 
     rad_filem = glob.glob(dir0+'/GEOS.fp.asm.tavg1_2d_rad_Nx.*_2330.V01.nc4' )

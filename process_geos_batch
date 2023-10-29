@@ -10,12 +10,12 @@
 echo "Begin Prepare-Submit Job"
 
 module purge
-module load python
+module load conda
 module load ncarenv
 module load intel
 module list
 
-ncar_pylib
+conda activate npl
 
 date
 echo "Begin GEOS Processing Job"

@@ -7,8 +7,8 @@ print("BEGIN GEOS processing ...")
 day = timedelta(days=1)
 now = datetime.now()
 
-days_back = 10
-#days_back = 20
+#days_back = 10
+days_back = 22
 
 # check if data is download for past <days_back>+1 days ...
 

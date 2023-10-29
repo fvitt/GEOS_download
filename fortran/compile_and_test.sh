@@ -13,9 +13,10 @@ module load ncarbinlibs
 module load intel
 module load ncarcompilers
 module load netcdf
-module load python
+module load conda
 module list
-ncar_pylib
+
+conda activate npl
 
 f2py -c  --compiler=intelem --fcompiler=intelem --f90flags="-132 -ftz -FR -O2" -L$NETCDF/lib -lnetcdf python_geos5_das_2x.f90 -m python_geos5_das_2x
 
