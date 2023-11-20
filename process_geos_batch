@@ -2,20 +2,20 @@
 #
 #PBS -N proc_geos_rean
 #PBS -A P19010000
-#PBS -l select=1:ncpus=8:mem=100GB
+#PBS -l select=1:ncpus=1:mem=100GB
 #PBS -l walltime=04:00:00
 #PBS -q casper
 #PBS -j oe
 
 echo "Begin Prepare-Submit Job"
 
-module purge
-module load conda
-module load ncarenv
-module load intel
-module list
+#module purge
+#module load conda
+#module load ncarenv
+#module load intel
+#module list
 
-conda activate npl
+#conda activate npl
 
 date
 echo "Begin GEOS Processing Job"
@@ -27,8 +27,8 @@ setenv LID "`date +%y%m%d-%H%M%S`"
 
 ./process_geos.py >&! /glade/scratch/fvitt/GEOS/proc_geos.log.$LID
 
-echo "qsub -a 0500 process_geos_batch"
-qsub -a 0500 process_geos_batch
+echo "qsub -a 0500 -V process_geos_batch"
+qsub -a 0500 -V process_geos_batch
 
 echo "End GEOS Processing Job"
 date

@@ -7,13 +7,13 @@ subroutine test( rc )
   integer :: yearvar
   integer :: monthvar
   integer :: dayvar
-  
+
   character(len=16) :: year, month, day
   character(len=128), parameter :: path_in = '/glade/scratch/fvitt/GEOS'
   character(len=128), parameter :: path_out = '/glade/scratch/fvitt/GEOS'
 
-  integer, parameter :: newLats = 96 
-  integer, parameter :: newLons = 144 
+  integer, parameter :: newLats = 96
+  integer, parameter :: newLons = 144
 
   character(len=256) :: inFileName, outFileName
 
@@ -24,8 +24,8 @@ subroutine test( rc )
   dayvar = 22
 
   write( year,fmt='(I4.4)') yearvar
-  write( month,fmt='(I2.2)') monthvar 
-  write( day,fmt='(I2.2)') dayvar 
+  write( month,fmt='(I2.2)') monthvar
+  write( day,fmt='(I2.2)') dayvar
   print*,' date = ',yearvar,monthvar,dayvar
   inFileName = trim(path_in)//'/Y'//trim(year)//'/M'//trim(month)//'/D'//trim(day)// &
               '/GEOS5_orig_res_'//trim(year)//trim(month)//trim(day)//'.nc'
@@ -42,7 +42,7 @@ end subroutine test
 subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   use netcdf
 
-  implicit none 
+  implicit none
 
  ! args
   integer,intent(in) :: newLats, newLons
@@ -98,7 +98,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
 
   write(*,fmt='(a)') ' inFileName = '//trim(inFileName)
   write(*,fmt='(a)') ' outFileName = '//trim(outFileName)
-   
+
   call date_and_time( values=time_vals)
   write(*,fmt='(" time: ",I2.2,":",I2.2,":",I2.2)') time_vals(5:7)
 
@@ -141,7 +141,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   ! What is the name of the unlimited dimension, how many records are there?
   status = nf90_inquire_dimension(ncid, RecordDimID, name = RecordDimName, len = nRecords)
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   allocate(date(nRecords),datesec(nRecords))
   allocate(lev(nLevs),hyam(nLevs),hybm(nLevs))
   allocate(time(nRecords))
@@ -258,7 +258,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   if (status /= nf90_noerr) call handle_err(status)
 
   ! setup output file
-  status = nf90_create( outFileName, nf90_clobber, out_ncid)
+  status = nf90_create( outFileName, cmode=nf90_classic_model, ncid=out_ncid)
   if (status /= nf90_noerr) call handle_err(status)
 
   ! dimensions in out file
@@ -325,12 +325,12 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   if(status /= nf90_NoErr) call handle_err(status)
   status = nf90_copy_att(ncid, hyamid, "long_name", out_ncid, newHyamVarId )
   if (status /= nf90_noerr) call handle_err(status)
- 
+
   status = nf90_def_var(out_ncid, "hybm",     nf90_float, (/ newLevDimID /),  newHybmVarId)
   if(status /= nf90_NoErr) call handle_err(status)
   status = nf90_copy_att(ncid, hybmid, "long_name", out_ncid, newHybmVarId )
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   status = nf90_def_var(out_ncid, "hyai",     nf90_float, (/ newiLevDimID /),  newHyaiVarId)
   if(status /= nf90_NoErr) call handle_err(status)
   status = nf90_copy_att(ncid, hyaiid, "long_name", out_ncid, newHyaiVarId )
@@ -340,7 +340,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   if(status /= nf90_NoErr) call handle_err(status)
   status = nf90_copy_att(ncid, hybiid, "long_name", out_ncid, newHybiVarId )
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   ! Define the data variables
   status = nf90_def_var(out_ncid, "PS", nf90_float, (/ newLonDimId, newLatDimID, newRecordDimID /), newPSvarId)
   if(status /= nf90_NoErr) call handle_err(status)
@@ -446,7 +446,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   if (status /= nf90_noerr) call handle_err(status)
   status = nf90_copy_att(ncid, hflxid, "long_name", out_ncid, newSHFLXvarId )
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   call date_and_time( values=time_vals)
   write(hist_str,fmt='("created by regrid_met_data : ",I4.4,"-",I2.2,"-",I2.2," ",I2.2,":",I2.2,":",I2.2)')  time_vals(1:3), time_vals(5:7)
   status = nf90_put_att(out_ncid, NF90_GLOBAL, 'history', trim(hist_str) )
@@ -520,9 +520,9 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   status = nf90_get_var(ncid, snowhid, da)
   if (status /= nf90_noerr) call handle_err(status)
   call MAP_A2A(nLons,nLats,1,nRecords,da,newLons,newLats,db,0,0)
-! WHERE(db>500.) 
+! WHERE(db>500.)
 !    db = 0.
-! elsewhere 
+! elsewhere
 !  db=db
 ! end where
   status = nf90_put_var(out_ncid, newSNOWHvarId, db)
@@ -551,7 +551,7 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   call MAP_A2A(nLons,nLats,1,nRecords,da,newLons,newLats,db,0,0)
   status = nf90_put_var(out_ncid, newSHFLXvarId, db)
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   status = nf90_get_var(ncid, tauxid, da)
   if (status /= nf90_noerr) call handle_err(status)
   call MAP_A2A(nLons,nLats,1,nRecords,da,newLons,newLats,db,0,0)
@@ -563,13 +563,13 @@ subroutine regrid_met_data( newLats, newLons, inFileName, outFileName, rc )
   call MAP_A2A(nLons,nLats,1,nRecords,da,newLons,newLats,db,0,0)
   status = nf90_put_var(out_ncid, newTAUYvarId, db)
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   status = nf90_get_var(ncid, tsid, da)
   if (status /= nf90_noerr) call handle_err(status)
   call MAP_A2A(nLons,nLats,1,nRecords,da,newLons,newLats,db,0,0)
   status = nf90_put_var(out_ncid, newTSvarId, db)
   if (status /= nf90_noerr) call handle_err(status)
-  
+
   call date_and_time( values=time_vals)
   write(*,fmt='(" time: ",I2.2,":",I2.2,":",I2.2)') time_vals(5:7)
 
@@ -665,19 +665,19 @@ subroutine MAP_A2A( im, jm, km, tm, q1, in, jn, q2, ig, iv)
 !      km=1
 
       pi=4.*atan(1.)
- 
+
       dx1 = 360./float(im)
       dx2 = 360./float(in)
       dy1 = pi/float(jm-1)
       dy2 = pi/float(jn-1)
- 
+
       do i=1,im+1
          lon1(i) = dx1 * (-0.5 + (i-1) )
       enddo
       do i=1,in+1
          lon2(i) = dx2 * (-0.5 + (i-1) )
       enddo
- 
+
       sin1(   1) = -1.
       sin1(jm+1) =  1.
       do j=2,jm
@@ -975,13 +975,13 @@ subroutine MAP_A2A( im, jm, km, tm, q1, in, jn, q2, ig, iv)
       if(sin2(j) .ge. sin1(m) .and. sin2(j) .le. sin1(m+1)) then
          pl = (sin2(j)-sin1(m)) / dy1(m)
          if(sin2(j+1) .le. sin1(m+1)) then
-! entire new cell is within the original cell 
+! entire new cell is within the original cell
             pr = (sin2(j+1)-sin1(m)) / dy1(m)
             q2(i,j) = al(i,m) + 0.5*(a6(i,m)+ar(i,m)-al(i,m)) *(pr+pl)-a6(i,m)*r3*(pr*(pr+pl)+pl**2)
                j0 = m
                goto 555
           else
-! South most fractional aream 
+! South most fractional aream
             qsum = (sin1(m+1)-sin2(j))*(al(i,m)+0.5*(a6(i,m)+ ar(i,m)-al(i,m))*(1.+pl)-a6(i,m)*(r3*(1.+pl*(1.+pl))))
               do mm=m+1,jm-ig
 ! locate the eastern edge: sin2(j+1)

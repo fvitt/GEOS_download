@@ -48,17 +48,21 @@ def combine_met_data( rootdir, date, ofilepath ) :
     dates = []
     datesecs = []
 
-    print(" time average every 3 hours ...")
+    #print(" time average every 3 hours ...")
     # time average every 3 hours
-    for n in range(0,8):
-       hr = n*3
+    for n in range(0,16,2):
+       hr = int((n/2)*3)
        #print("  hr: ",hr)
-       rad_file1 = xr.open_dataset(rad_filepaths[hr])
-       rad_file2 = xr.open_dataset(rad_filepaths[hr+1])
-       flx_file1 = xr.open_dataset(flx_filepaths[hr])
-       flx_file2 = xr.open_dataset(flx_filepaths[hr+1])
-       lnd_file1 = xr.open_dataset(lnd_filepaths[hr])
-       lnd_file2 = xr.open_dataset(lnd_filepaths[hr+1])
+       
+       #print('   rad_file1 : ',rad_filepaths[n])
+       #print('   rad_file2 : ',rad_filepaths[n+1])
+       
+       rad_file1 = xr.open_dataset(rad_filepaths[n])
+       rad_file2 = xr.open_dataset(rad_filepaths[n+1])   
+       flx_file1 = xr.open_dataset(flx_filepaths[n])
+       flx_file2 = xr.open_dataset(flx_filepaths[n+1])
+       lnd_file1 = xr.open_dataset(lnd_filepaths[n])
+       lnd_file2 = xr.open_dataset(lnd_filepaths[n+1])
 
        ds1 = xr.Dataset( data_vars = {'ALB':rad_file1.ALBEDO, 'TS':rad_file1.TS, 'FSDS':rad_file1.SWGDN, 
                                       'SHFLX':flx_file1.HFLUX, 'TAUX':flx_file1.TAUX,'TAUY':flx_file1.TAUY, 'QFLX':flx_file1.EVAP,
@@ -80,7 +84,9 @@ def combine_met_data( rootdir, date, ofilepath ) :
 
        ds3.ORO.values = np.where(ds3.ORO.values>0.5,2.0,lfr)
 
-       file_3d = xr.open_dataset(asm_files[n])
+       nn = int(n/2)
+       file_3d = xr.open_dataset(asm_files[nn])
+       #print('    file_3d: ', asm_files[nn])
 
        ds4 = xr.merge( [ds3, xr.Dataset( { 'T':file_3d.T, 'U':file_3d.U, 'V':file_3d.V, 'Q':file_3d.QV, 'PS':file_3d.PS, 'PHIS':file_3d.PHIS } )] )
        xds.append( ds4 )
@@ -95,6 +101,8 @@ def combine_met_data( rootdir, date, ofilepath ) :
        flx_file2.close()
        lnd_file1.close()
        lnd_file2.close()
+
+    #return True
 
     #print("********************************************")
     print(" concat datasets ...")
@@ -169,7 +177,7 @@ def _test() :
     time0 = datetime.now()
 
     rootdir = '/glade/scratch/fvitt/GEOS_test'
-    date = datetime(2019,12,10)
+    date = datetime(2023,10,11)
     yyyymmdd = date.strftime("%Y%m%d")
     dir1 = rootdir + "/" + date.strftime("Y%Y/M%m/D%d")
     ofilepath = dir1+'/GEOS5_orig_res_'+yyyymmdd+'.py3test2.nc'

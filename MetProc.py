@@ -4,8 +4,9 @@ from os import path, remove, system
 from subprocess import call
 from glob import glob
 from combine_met_data import combine_met_data
-from python_geos5_das_2x import regrid_met_data
+from fortran_regrid import regrid_met_data
 from check_met_data import check_met_data
+import geos_download
 
 # untility object class for processing meteorolgy data
 class MetProc:
@@ -35,18 +36,27 @@ class MetProc:
         return path.exists(filepath)
 
     def download( self ):
-        year  = self.date.strftime("%Y")
-        month = self.date.strftime("%m")
-        day   = self.date.strftime("%d")
-        cmd = ["./download_data","-year",year,"-month",month,"-day",day,'-local_basedir',self.rootdir]
-        print(" cmd: ",cmd)
-        stat = call(cmd)
-        if stat == 0 :
+
+        ok = geos_download.download(self.date,self.rootdir)
+
+        if ok :
             cmd = ['touch',self.directory+'/.downloaded']
             stat = call(cmd)
-            return True
-        else :
-            return False
+
+        return ok
+
+        #year  = self.date.strftime("%Y")
+        #month = self.date.strftime("%m")
+        #day   = self.date.strftime("%d")
+        #cmd = ["./download_data","-year",year,"-month",month,"-day",day,'-local_basedir',self.rootdir]
+        #print(" cmd: ",cmd)
+        #stat = call(cmd)
+        #if stat == 0 :
+        #    cmd = ['touch',self.directory+'/.downloaded']
+        #    stat = call(cmd)
+        #    return True
+        #else :
+        #    return False
 
     def combine( self ):
         #help(self.rootdir)
@@ -156,7 +166,7 @@ def _test():
     print("Begin Test")
 
 #    date =  datetime(2013,12,31)
-    date =  datetime(2019,12,10)
+    date =  datetime(2023,10,12)
 
     geosproc = MetProc(date, '/glade/scratch/fvitt/GEOS_test')
     print("  check for : " + date.strftime("%x"))
@@ -205,8 +215,8 @@ def _test():
 
     time4 = datetime.now()
 
-    archived = geosproc.check( 'archived')
-    print("Archived: ", archived)
+#    archived = geosproc.check( 'archived')
+#    print("Archived: ", archived)
 
     time5 = datetime.now()
 
@@ -214,7 +224,7 @@ def _test():
     print("Combine time   : ", time2-time1)
     print("Regrid time    : ", time3-time2)
     print("Data check time: ", time4-time3)
-    print("Archive time   : ", time5-time4)
+#    print("Archive time   : ", time5-time4)
     print("Total time     : ", time5-time0)
 
     print("Test Done")
